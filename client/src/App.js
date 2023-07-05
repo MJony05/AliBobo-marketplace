@@ -1,5 +1,5 @@
 function App() {
-  return <div>AliBobo</div>
+  return <div>Alibaba</div>
 }
 
 export default App
