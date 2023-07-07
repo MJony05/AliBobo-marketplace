@@ -1,9 +1,16 @@
+.header {
+  position: sticky;
+  top: 0;
+}
 .container {
   width: 80%;
   margin: 0 auto;
 }
 .top-bar {
+  width: 100%;
   background-color: #fff;
+}
+.top-bar .container {
   padding: 10px 0;
   display: flex;
   justify-content: space-between;
@@ -62,4 +69,19 @@
 .link {
   text-decoration: none;
   color: #000;
+}
+.navbar {
+  width: 100%;
+  background-color: #20374f;
+  padding: 10px 0;
+}
+.navbar_link {
+  text-decoration: none;
+  color: #fff;
+  font-size: 16px;
+  padding: 0 10px;
+}
+.navbar_link:hover {
+  cursor: pointer;
+  color: #f36b32;
 }

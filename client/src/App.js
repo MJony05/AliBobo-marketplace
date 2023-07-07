@@ -6,7 +6,7 @@ import CartPage from './pages/CartPage'
 import OrderPage from './pages/OrderPage'
 import Header from './components/Header'
 import Footer from './components/Footer'
-
+import AdminPage from './pages/AdminPage'
 function App() {
   return (
     <Router>
@@ -17,6 +17,7 @@ function App() {
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/order" element={<OrderPage />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
         <Footer />
       </div>

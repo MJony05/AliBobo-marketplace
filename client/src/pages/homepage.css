@@ -1,0 +1,58 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+.main-page {
+  margin: 0;
+  height: calc(100vh - 60px);
+  background-image: url('https://materialorderdesk.com/c9e2e0b9e335720a27b96e48d66f7df6.jpg');
+  background-size: cover;
+  background-position: center;
+}
+.main-page .container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 40px;
+}
+.homepage-title {
+  width: 500px;
+  font-size: 32px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 20px;
+}
+.secondary-typo {
+  color: #f36b32;
+}
+.homepage-content-left {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 50px;
+  align-items: center;
+}
+.features-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.features-list li {
+  display: flex;
+  font-size: 18px;
+  gap: 6px;
+  color: #fff;
+}
+.homepage-button button {
+  width: 200px;
+  height: 50px;
+  background-color: #f36b32;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}

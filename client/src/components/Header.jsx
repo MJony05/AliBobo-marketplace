@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 import './header.css'
 function Header() {
   return (
-    <header>
-      <div className="container">
-        <div className="top-bar">
+    <header className="header">
+      <div className="top-bar">
+        <div className="container">
           <div className="top-bar-logo">
             <Link to="/">
               <img
@@ -57,9 +57,18 @@ function Header() {
           </Link>
         </div>
       </div>
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="/cart">Cart</Link>
+      <nav className="navbar">
+        <div className="container">
+          <Link className="navbar_link" to="/">
+            Bosh Sahifa
+          </Link>
+          <Link className="navbar_link" to="/categories">
+            Kategoriyalar
+          </Link>
+          <Link className="navbar_link" to="/about">
+            Biz haqimizda
+          </Link>
+        </div>
       </nav>
     </header>
   )
