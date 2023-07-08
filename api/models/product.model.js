@@ -5,7 +5,7 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please enter category name'],
   },
-  imageLink: {
+  image: {
     type: String,
     required: [true, 'Please enter image link'],
   },
@@ -22,6 +22,7 @@ const productSchema = new mongoose.Schema({
     required: [true, 'Please enter sub category'],
   },
   category: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
+  subCategory: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory' }],
 })
 
 module.exports = mongoose.model('Product', productSchema)
