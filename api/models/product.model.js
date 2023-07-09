@@ -21,8 +21,12 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please enter sub category'],
   },
-  category: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
-  subCategory: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory' }],
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: true,
+  },
+  subCategory: { type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory' },
 })
 
 module.exports = mongoose.model('Product', productSchema)
