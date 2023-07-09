@@ -17,10 +17,6 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please enter description'],
   },
-  subCategory: {
-    type: String,
-    required: [true, 'Please enter sub category'],
-  },
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
