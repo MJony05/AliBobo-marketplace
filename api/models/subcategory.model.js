@@ -14,6 +14,7 @@ const subcategorySchema = new mongoose.Schema({
     ref: 'Category',
     required: true,
   },
+  products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
 })
 subcategorySchema.pre('remove', async function (next) {
   const category = await this.model('Category').findById(this.category)
