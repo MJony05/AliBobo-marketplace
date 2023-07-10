@@ -2,12 +2,19 @@ const SubCategory = require('../models/subcategory.model')
 const ErrorResponse = require('../utils/ErrorResponse')
 const asyncHandler = require('../middlewares/async')
 const Category = require('../models/category.model')
+const Product = require('../models/product.model')
+const fs = require('fs')
+const path = require('path')
 // @desc    Get all subcategories
 // @route   GET /api/v1/categories/:id/subcategories
 // @access  Public
 
 exports.getSubCategories = asyncHandler(async (req, res, next) => {
+  const category = await Category.findById(req.params.id)
   const subCategories = await SubCategory.find({ category: req.params.id })
+  if (!category) {
+    return next(new ErrorResponse('Category not found', 404))
+  }
   res.status(200).json({ success: true, data: subCategories })
 })
 
@@ -36,7 +43,7 @@ exports.createSubcategory = [
     existingCategory.subCategories.push(subcategory)
     await existingCategory.save()
 
-    res.status(201).json({ success: true, data: subcategory })
+    return res.status(201).json({ success: true, data: subcategory })
   }),
 ]
 
@@ -64,8 +71,13 @@ exports.updateSubCategory = asyncHandler(async (req, res, next) => {
   }
   const editedSubCategory = {
     name: req.body.name || subCategory.name,
-    image: req.body.image || subCategory.image,
   }
+  if (req.file) {
+    editedSubCategory.image = '/uploads/' + req.file.filename
+    // delete the old image
+    fs.unlinkSync(path.join(__dirname, '../public', subCategory.image))
+  }
+
   const updatedSubCategory = await SubCategory.findByIdAndUpdate(
     req.params.id,
     editedSubCategory,
@@ -87,13 +99,47 @@ exports.deleteSubCategory = asyncHandler(async (req, res, next) => {
   if (!subCategory) {
     return next(new ErrorResponse('Subcategory not found', 404))
   }
-
   // Remove subcategory from parent category's subcategories array
   const category = await Category.findById(subCategory.category)
   if (category) {
     category.subCategories.pull(subCategory._id)
     await category.save()
   }
+  if (subCategory.image) {
+    try {
+      const imagePath = path.join(__dirname, '..', 'public', subCategory.image)
+      // Check if the file exists before attempting to delete it
+      const fileExists = await fs.promises
+        .access(imagePath, fs.constants.F_OK)
+        .then(() => true)
+        .catch(() => false)
+      if (fileExists) {
+        console.log('subcategory image exists, deleting now')
+        // Delete the category image file from the server
+        await fs.promises.unlink(imagePath)
+      }
+    } catch (error) {
+      // Handle any errors during file deletion
+      console.error('Error deleting subcategory image:', error)
+    }
+  }
+  const products = await Product.find({ subcategory: subCategory._id })
+  console.log(products)
+  for (const product of products) {
+    const imagePath = path.join(__dirname, '..', 'public', product.image)
+    // Check if the file exists before attempting to delete it
+    const fileExists = await fs.promises
+      .access(imagePath, fs.constants.F_OK)
+      .then(() => true)
+      .catch(() => false)
+    if (fileExists) {
+      console.log('product image exists, deleting now')
+      // Delete the category image file from the server
+      await fs.promises.unlink(imagePath)
+    }
+  }
+
+  await Product.deleteMany({ subCategory: subCategory._id })
   res
     .status(200)
     .json({ success: true, message: 'Subcategory deleted successfully' })

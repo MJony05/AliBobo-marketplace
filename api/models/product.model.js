@@ -22,7 +22,12 @@ const productSchema = new mongoose.Schema({
     ref: 'Category',
     required: true,
   },
-  subCategory: { type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory' },
+  subcategory: { type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory' },
 })
-
+productSchema.pre('remove', async function (next) {
+  const category = await this.model('Category').findById(this.category)
+  category.products.pull(this._id)
+  await category.save()
+  next()
+})
 module.exports = mongoose.model('Product', productSchema)
