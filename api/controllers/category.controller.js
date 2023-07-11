@@ -23,6 +23,7 @@ exports.createCategory = asyncHandler(async (req, res, next) => {
     name: req.body.name,
     image: 'uploads/' + req.file.filename,
   })
+  console.log(req.file)
   res.status(201).json({ success: true, data: newCategory })
 })
 
@@ -46,6 +47,31 @@ exports.updateCategory = asyncHandler(async (req, res, next) => {
   if (!category) {
     return next(new ErrorResponse('Category not found', 404))
   }
+  // updagte the category image if a new image is uploaded
+  if (req.file) {
+    // Delete the old image if it exists
+    if (category.image) {
+      try {
+        const imagePath = path.join(__dirname, '..', 'public', category.image)
+        // Check if the file exists before attempting to delete it
+        const fileExists = await fs.promises
+          .access(imagePath, fs.constants.F_OK)
+          .then(() => true)
+          .catch(() => false)
+        if (fileExists) {
+          console.log('category image exists, deleting now')
+          // Delete the category image file from the server
+          await fs.promises.unlink(imagePath)
+        }
+      } catch (error) {
+        // Handle any errors during file deletion
+        console.error('Error deleting category image:', error)
+      }
+    }
+    // Update the category image
+    req.body.image = 'uploads/' + req.file.filename
+  }
+  console.log(req.file)
   const editedCategory = {
     name: req.body.name || category.name,
     image: req.body.image || category.image,

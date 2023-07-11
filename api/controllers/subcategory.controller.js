@@ -73,11 +73,31 @@ exports.updateSubCategory = asyncHandler(async (req, res, next) => {
     name: req.body.name || subCategory.name,
   }
   if (req.file) {
-    editedSubCategory.image = '/uploads/' + req.file.filename
-    // delete the old image
-    fs.unlinkSync(path.join(__dirname, '../public', subCategory.image))
+    if (subCategory.image) {
+      try {
+        const imagePath = path.join(
+          __dirname,
+          '..',
+          'public',
+          subCategory.image
+        )
+        // Check if the file exists before attempting to delete it
+        const fileExists = await fs.promises
+          .access(imagePath, fs.constants.F_OK)
+          .then(() => true)
+          .catch(() => false)
+        if (fileExists) {
+          console.log('subcategory image exists, deleting now')
+          // Delete the category image file from the server
+          await fs.promises.unlink(imagePath)
+        }
+      } catch (error) {
+        // Handle any errors during file deletion
+        console.error('Error deleting subcategory image:', error)
+      }
+    }
   }
-
+  editedSubCategory.image = '/uploads/' + req.file.filename
   const updatedSubCategory = await SubCategory.findByIdAndUpdate(
     req.params.id,
     editedSubCategory,
@@ -124,7 +144,6 @@ exports.deleteSubCategory = asyncHandler(async (req, res, next) => {
     }
   }
   const products = await Product.find({ subcategory: subCategory._id })
-  console.log(products)
   for (const product of products) {
     const imagePath = path.join(__dirname, '..', 'public', product.image)
     // Check if the file exists before attempting to delete it

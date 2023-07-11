@@ -101,11 +101,20 @@ exports.updateProduct = [
     }
     // check if the image is uploaded and set the image field of editedProduct
     if (req.file) {
+      if (product.image) {
+        const imagePath = path.join(__dirname, '..', 'public', product.image)
+        // Check if the file exists before attempting to delete it
+        const fileExists = await fs.promises
+          .access(imagePath, fs.constants.F_OK)
+          .then(() => true)
+          .catch(() => false)
+        if (fileExists) {
+          console.log('product image exists, deleting it')
+          await fs.promises.unlink(imagePath)
+        }
+      }
       editedProduct.image = '/uploads/' + req.file.filename
-      // delete the old image
-      fs.unlinkSync(path.join(__dirname, '../public', product.image))
     }
-
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       editedProduct,

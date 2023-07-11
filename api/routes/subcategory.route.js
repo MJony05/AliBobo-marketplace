@@ -13,7 +13,7 @@ const router = Router()
 router.get('/:id/subcategories/', getSubCategories)
 router.post('/:id/subcategories/', upload.single('image'), createSubcategory)
 router.get('/subcategories/:id', getSubCategory)
-router.put('/subcategories/:id', updateSubCategory)
+router.put('/subcategories/:id', upload.single('image'), updateSubCategory)
 router.delete('/subcategories/:id', deleteSubCategory)
 
 module.exports = router
