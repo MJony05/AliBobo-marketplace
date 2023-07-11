@@ -10,7 +10,6 @@ function CategoriesList() {
       try {
         const response = await axios.get(url + '/api/v1/categories')
         setCategories(response.data.data)
-        console.log('Categories:', response.data.data)
       } catch (error) {
         console.error('Error fetching categories:', error)
       }
