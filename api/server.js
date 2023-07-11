@@ -2,6 +2,7 @@ const express = require('express')
 const dotenv = require('dotenv')
 const connectDB = require('./config/db')
 const path = require('path')
+const cors = require('cors')
 dotenv.config()
 
 connectDB()
@@ -11,7 +12,7 @@ const app = express()
 // Body parser
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-
+app.use(cors())
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')))
 
