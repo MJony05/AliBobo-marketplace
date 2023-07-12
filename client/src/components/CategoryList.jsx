@@ -1,22 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import CategoryItem from './CategoryItem'
+import { getCategories } from '../services/api'
 import './category.css'
 function CategoriesList() {
   const [categories, setCategories] = useState([])
-  const url = process.env.REACT_APP_API_URL
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(url + '/api/v1/categories')
-        setCategories(response.data.data)
+        const categoriesData = await getCategories()
+        setCategories(categoriesData)
       } catch (error) {
         console.error('Error fetching categories:', error)
       }
     }
     fetchData()
-  }, [url])
-
+  }, [])
   const categoriesList =
     categories.length !== 0 ? (
       categories.map((category) => {
