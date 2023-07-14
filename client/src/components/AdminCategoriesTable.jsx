@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getCategories } from '../services/api'
+import { getCategories, createCategory, updateCategory } from '../services/api'
 import {
   Table,
   TableBody,
@@ -13,13 +13,27 @@ import {
   DialogActions,
   Paper,
   TableContainer,
+  Typography,
+  Toolbar,
+  Grid,
 } from '@mui/material'
 import EditCategoryForm from './EditCategoryForm'
+import AddCategoryForm from './AddCategoryForm'
 
 const CategoriesTable = () => {
   const [isUpdateFormOpen, setUpdateFormOpen] = useState(false)
+  const [isAddFormOpen, setAddFormOpen] = useState(false)
   const [selectedCategoryId, setSelectedCategoryId] = useState('')
   const [categories, setCategories] = useState([])
+
+  const [categoryName, setCategoryName] = useState('')
+  const [categoryImage, setCategoryImage] = useState(null)
+  const handleCategoryNameChange = (name) => {
+    setCategoryName(name)
+  }
+  const handleCategoryImageChange = (image) => {
+    setCategoryImage(image)
+  }
   const url = process.env.REACT_APP_API_URL
   useEffect(() => {
     const fetchData = async () => {
@@ -32,16 +46,38 @@ const CategoriesTable = () => {
     }
     fetchData()
   }, [])
-  const handleEditButtonClick = (categoryId) => {
-    setSelectedCategoryId(categoryId)
-    setUpdateFormOpen(true)
+  // const handleEditButtonClick = (categoryId) => {
+  //   setSelectedCategoryId(categoryId)
+  //   setUpdateFormOpen(true)
+  // }
+  const handleAddButtonClick = () => {
+    setAddFormOpen(true)
   }
-
   const handleCategoryRowClick = (categoryId) => {
     // Handle opening the SubcategoriesTable component or perform other actions
     console.log('Category row clicked:', categoryId)
   }
 
+  const handleAddCategory = async () => {
+    try {
+      const formData = new FormData()
+      formData.append('name', categoryName)
+      formData.append('image', categoryImage)
+      await createCategory(formData)
+    } catch (error) {
+      console.error('Error adding category:', error)
+    }
+  }
+  const handleUpdateCategory = async () => {
+    try {
+      const formData = new FormData()
+      formData.append('name', categoryName)
+      formData.append('image', categoryImage)
+      await updateCategory(formData)
+    } catch (error) {
+      console.error('Error updating category:', error)
+    }
+  }
   // Sample data for the categories table
   // const categories = [
   //   { id: 1, name: 'Category 1', image: 'image1.jpg' },
@@ -50,8 +86,41 @@ const CategoriesTable = () => {
   // ]
 
   return (
-    <TableContainer component={Paper} sx={{ padding: '32px' }}>
-      <Table>
+    <TableContainer component={Paper} sx={{ padding: '0 32px' }}>
+      <Toolbar>
+        <Grid container justifyContent="space-between" alignItems="center">
+          <Typography variant="h6">Table Name</Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleAddButtonClick()}
+          >
+            Add Category
+          </Button>
+        </Grid>
+      </Toolbar>
+      <Table aria-label="simple table" stickyHeader>
+        <Dialog open={isAddFormOpen} onClose={() => setAddFormOpen(false)}>
+          <DialogTitle>Kategoriya qoshish</DialogTitle>
+          <DialogContent>
+            <AddCategoryForm
+              handleCategoryImageChange={handleCategoryImageChange}
+              handleCategoryNameChange={handleCategoryNameChange}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setAddFormOpen(false)}>Cancel</Button>
+            <Button
+              onClick={() => {
+                handleAddCategory()
+                setAddFormOpen(false)
+              }}
+              color="primary"
+            >
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
         <TableHead>
           <TableRow>
             <TableCell>Image</TableCell>
@@ -75,7 +144,9 @@ const CategoriesTable = () => {
                 <Button
                   sx={{ m: 2 }}
                   variant="outlined"
-                  onClick={() => handleEditButtonClick(category._id)}
+                  onClick={() => {
+                    setUpdateFormOpen(true)
+                  }}
                 >
                   Edit
                 </Button>
@@ -88,13 +159,28 @@ const CategoriesTable = () => {
         </TableBody>
       </Table>
       <Dialog open={isUpdateFormOpen} onClose={() => setUpdateFormOpen(false)}>
-        <DialogTitle>Edit Category</DialogTitle>
+        <DialogTitle>Kategoriyani o'zgartirish</DialogTitle>
         <DialogContent>
-          <EditCategoryForm categoryId={selectedCategoryId} />
+          <EditCategoryForm
+            handleCategoryImageChange={handleCategoryImageChange}
+            handleCategoryNameChange={handleCategoryNameChange}
+          />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setUpdateFormOpen(false)}>Cancel</Button>
-          <Button onClick={() => setUpdateFormOpen(false)} color="primary">
+          <Button
+            onClick={() => {
+              setUpdateFormOpen(false)
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              handleUpdateCategory()
+              setUpdateFormOpen(false)
+            }}
+            color="primary"
+          >
             Save
           </Button>
         </DialogActions>

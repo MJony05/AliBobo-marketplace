@@ -1,0 +1,14 @@
+.main-page {
+  margin: 0;
+  height: calc(100vh - 60px);
+  background-image: url('https://materialorderdesk.com/c9e2e0b9e335720a27b96e48d66f7df6.jpg');
+  background-size: cover;
+  background-position: center;
+}
+.main-page .container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 40px;
+}

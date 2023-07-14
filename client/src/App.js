@@ -3,6 +3,7 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import HomePage from './pages/HomePage'
 import CategoriesPage from './pages/CategoriesPage'
+import SubcategoriesPage from './pages/SubCategoriesPage'
 import AdminPage from './pages/AdminPage'
 import AdminSubcategoriesTable from './components/AdminSubcategoriesTable'
 import AdminProductsTable from './components/AdminProductsTable'
@@ -17,6 +18,10 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="categories/" element={<CategoriesPage />} />
+          <Route
+            path="categories/:categoryId/subcategories"
+            element={<SubcategoriesPage />}
+          />
           <Route path="cart" element={<CartPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route

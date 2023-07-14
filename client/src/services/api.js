@@ -25,3 +25,27 @@ export const getCategories = async () => {
     throw error
   }
 }
+
+export const createCategory = async (category) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/api/v1/categories`, category)
+    return response.data.data
+  } catch (error) {
+    console.error('Error creating category:', error)
+    throw error
+  }
+}
+
+export const updateCategory = async (category) => {
+  console.log('category', category)
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/api/v1/categories/${category._id}`,
+      category
+    )
+    return response.data.data
+  } catch (error) {
+    console.error('Error updating category:', error)
+    throw error
+  }
+}

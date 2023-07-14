@@ -1,4 +1,9 @@
 .admin-page {
   background-color: #eee;
-  height: 100vh;
+  text-align: center;
+}
+.admin-page h1 {
+  font-size: 32px;
+  font-weight: 500;
+  margin-bottom: 20px;
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { TextField } from '@mui/material'
 import { MuiFileInput } from 'mui-file-input'
-const EditCategoryForm = ({
+const AddCategoryForm = ({
   handleCategoryImageChange,
   handleCategoryNameChange,
 }) => {
@@ -34,4 +34,4 @@ const EditCategoryForm = ({
   )
 }
 
-export default EditCategoryForm
+export default AddCategoryForm
