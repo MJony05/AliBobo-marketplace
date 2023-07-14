@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { getCategories, createCategory, updateCategory } from '../services/api'
+import { Link } from 'react-router-dom'
+import {
+  getCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+} from '../services/api'
 import {
   Table,
   TableBody,
@@ -23,6 +29,7 @@ import AddCategoryForm from './AddCategoryForm'
 const CategoriesTable = () => {
   const [isUpdateFormOpen, setUpdateFormOpen] = useState(false)
   const [isAddFormOpen, setAddFormOpen] = useState(false)
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [selectedCategoryId, setSelectedCategoryId] = useState('')
   const [categories, setCategories] = useState([])
 
@@ -46,16 +53,8 @@ const CategoriesTable = () => {
     }
     fetchData()
   }, [])
-  // const handleEditButtonClick = (categoryId) => {
-  //   setSelectedCategoryId(categoryId)
-  //   setUpdateFormOpen(true)
-  // }
   const handleAddButtonClick = () => {
     setAddFormOpen(true)
-  }
-  const handleCategoryRowClick = (categoryId) => {
-    // Handle opening the SubcategoriesTable component or perform other actions
-    console.log('Category row clicked:', categoryId)
   }
 
   const handleAddCategory = async () => {
@@ -64,6 +63,8 @@ const CategoriesTable = () => {
       formData.append('name', categoryName)
       formData.append('image', categoryImage)
       await createCategory(formData)
+      const categoriesData = await getCategories()
+      setCategories(categoriesData)
     } catch (error) {
       console.error('Error adding category:', error)
     }
@@ -73,9 +74,23 @@ const CategoriesTable = () => {
       const formData = new FormData()
       formData.append('name', categoryName)
       formData.append('image', categoryImage)
+      formData.append('_id', selectedCategoryId)
       await updateCategory(formData)
+      const categoriesData = await getCategories()
+      setCategories(categoriesData)
     } catch (error) {
       console.error('Error updating category:', error)
+    }
+  }
+
+  const handleDeleteButtonClick = async (selectedCategoryId) => {
+    try {
+      console.log(selectedCategoryId)
+      await deleteCategory(selectedCategoryId)
+      const categoriesData = await getCategories()
+      setCategories(categoriesData)
+    } catch (error) {
+      console.error('Error deleting category:', error)
     }
   }
   // Sample data for the categories table
@@ -89,7 +104,7 @@ const CategoriesTable = () => {
     <TableContainer component={Paper} sx={{ padding: '0 32px' }}>
       <Toolbar>
         <Grid container justifyContent="space-between" alignItems="center">
-          <Typography variant="h6">Table Name</Typography>
+          <Typography variant="h6">Kategoriyalar</Typography>
           <Button
             variant="contained"
             color="primary"
@@ -131,26 +146,36 @@ const CategoriesTable = () => {
         </TableHead>
         <TableBody>
           {categories.map((category) => (
-            <TableRow
-              key={category._id}
-              onClick={() => handleCategoryRowClick(category._id)}
-            >
+            <TableRow key={category._id}>
               <TableCell>
                 <img src={url + '/' + category.image} width="80px" alt="" />{' '}
               </TableCell>
               <TableCell>{category._id}</TableCell>
               <TableCell>{category.name}</TableCell>
               <TableCell>
+                <Link to={'categories/' + category._id + '/subcategories'}>
+                  <Button variant="contained" color="primary" sx={{ m: 2 }}>
+                    View
+                  </Button>
+                </Link>
                 <Button
                   sx={{ m: 2 }}
                   variant="outlined"
                   onClick={() => {
+                    setSelectedCategoryId(category._id)
                     setUpdateFormOpen(true)
                   }}
                 >
                   Edit
                 </Button>
-                <Button variant="contained" color="error">
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => {
+                    setSelectedCategoryId(category._id)
+                    setDeleteDialogOpen(true)
+                  }}
+                >
                   Delete
                 </Button>
               </TableCell>
@@ -158,6 +183,29 @@ const CategoriesTable = () => {
           ))}
         </TableBody>
       </Table>
+      <Dialog
+        open={isDeleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Kategoriyani o'chirish</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Siz rostdan ham kategoriyani o'chirmoqchimisiz?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+          <Button
+            onClick={() => {
+              handleDeleteButtonClick(selectedCategoryId)
+              setDeleteDialogOpen(false)
+            }}
+            color="primary"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Dialog open={isUpdateFormOpen} onClose={() => setUpdateFormOpen(false)}>
         <DialogTitle>Kategoriyani o'zgartirish</DialogTitle>
         <DialogContent>
@@ -167,13 +215,7 @@ const CategoriesTable = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() => {
-              setUpdateFormOpen(false)
-            }}
-          >
-            Cancel
-          </Button>
+          <Button onClick={() => setUpdateFormOpen(false)}>Cancel</Button>
           <Button
             onClick={() => {
               handleUpdateCategory()

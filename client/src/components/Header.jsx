@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import logo from './images/xixi.png'
 import './header.css'
 function Header() {
   return (
@@ -8,11 +9,9 @@ function Header() {
         <div className="container">
           <div className="top-bar-logo">
             <Link to="/">
-              <img
-                className="header-logo"
-                src="https://renorun.com/assets/logos/RenoRunHorizontal-Grape-RGB.svg?c=57719f4155d1904b0162375648ccec44"
-                alt=""
-              />
+              <div>
+                <img className="header-logo" src={logo} alt="" width="300px" />
+              </div>
             </Link>
           </div>
           <div className="search-bar">

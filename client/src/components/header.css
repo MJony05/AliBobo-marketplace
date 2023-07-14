@@ -10,11 +10,15 @@
 .top-bar {
   width: 100%;
   background-color: #fff;
+  display: flex;
+  align-items: center;
 }
 .top-bar .container {
   padding: 10px 0;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  height: 10vh;
 }
 .search-bar {
   width: 100%;

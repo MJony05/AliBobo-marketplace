@@ -71,6 +71,7 @@ exports.updateSubCategory = asyncHandler(async (req, res, next) => {
   }
   const editedSubCategory = {
     name: req.body.name || subCategory.name,
+    image: subCategory.image,
   }
   if (req.file) {
     if (subCategory.image) {
@@ -96,8 +97,8 @@ exports.updateSubCategory = asyncHandler(async (req, res, next) => {
         console.error('Error deleting subcategory image:', error)
       }
     }
+    editedSubCategory.image = '/uploads/' + req.file.filename
   }
-  editedSubCategory.image = '/uploads/' + req.file.filename
   const updatedSubCategory = await SubCategory.findByIdAndUpdate(
     req.params.id,
     editedSubCategory,
