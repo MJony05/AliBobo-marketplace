@@ -8,6 +8,7 @@ import AdminPage from './pages/AdminPage'
 import AdminSubcategoriesTable from './components/AdminSubcategoriesTable'
 import AdminProductsTable from './components/AdminProductsTable'
 import CartPage from './pages/CartPage'
+import ProductsPage from './pages/ProductsPage'
 import './App.css'
 
 function App() {
@@ -21,6 +22,10 @@ function App() {
           <Route
             path="categories/:categoryId/subcategories"
             element={<SubcategoriesPage />}
+          />
+          <Route
+            path="categories/:categoryId/subcategories/:subcategoryId/products"
+            element={<ProductsPage />}
           />
           <Route path="cart" element={<CartPage />} />
           <Route path="/admin" element={<AdminPage />} />

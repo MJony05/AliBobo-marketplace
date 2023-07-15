@@ -64,6 +64,19 @@ export const deleteCategory = async (categoryId) => {
     throw error
   }
 }
+
+export const getCategory = async (categoryId) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/v1/categories/${categoryId}`
+    )
+    return response.data.data
+  } catch (error) {
+    console.error('Error fetching category:', error)
+    throw error
+  }
+}
+
 // url = http://localhost:4000/api/v1/categories:id/subcategories
 export const getSubcategories = async (componentId) => {
   try {
