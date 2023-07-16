@@ -1,4 +1,10 @@
-import { getProducts, getCategory, createProduct } from '../services/api'
+import {
+  getProducts,
+  getCategory,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} from '../services/api'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
@@ -19,15 +25,21 @@ import {
   Grid,
 } from '@mui/material'
 import AddProductForm from './AddProductForm'
+import EditProductForm from './EditProductForm'
+
 const AdminProductsTable = ({ categoryId, subcategoriesArray }) => {
   const [products, setProducts] = useState([])
+  const [product, setProduct] = useState(null)
   const [isAddFormOpen, setAddFormOpen] = useState(false)
+  const [isUpdateFormOpen, setUpdateFormOpen] = useState(false)
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [productCode, setProductCode] = useState('')
   const [productName, setProductName] = useState('')
   const [productImage, setProductImage] = useState(null)
   const [productPrice, setProductPrice] = useState('')
   const [productDescription, setProductDescription] = useState('')
   const [productSubcategory, setProductSubcategory] = useState('')
+  const [selectedProductId, setSelectedProductId] = useState('')
   const url = process.env.REACT_APP_API_URL
   useEffect(() => {
     const fetchData = async () => {
@@ -49,6 +61,32 @@ const AdminProductsTable = ({ categoryId, subcategoriesArray }) => {
   const handleAddButtonClick = () => {
     setAddFormOpen(true)
   }
+
+  const handleAddProduct = async () => {
+    const formData = new FormData()
+    formData.append('code', productCode)
+    formData.append('name', productName)
+    formData.append('image', productImage)
+    formData.append('price', productPrice)
+    formData.append('description', productDescription)
+    if (productSubcategory !== null && productSubcategory !== undefined) {
+      formData.append('subcategory', productSubcategory)
+    }
+    try {
+      await createProduct(categoryId, formData)
+      const productsData = await getProducts(categoryId)
+      setProducts(productsData)
+      setAddFormOpen(false)
+    } catch (error) {
+      console.error('Error creating category:', error)
+    }
+  }
+  const handleUpdateButtonClick = (id) => {
+    const product = products.find((product) => product._id === id)
+    setProduct(product)
+    setUpdateFormOpen(true)
+  }
+
   const handleProductCodeChange = (code) => {
     setProductCode(code)
   }
@@ -65,28 +103,48 @@ const AdminProductsTable = ({ categoryId, subcategoriesArray }) => {
     setProductDescription(description)
   }
   const handleProductSubcategoryChange = (subcategory) => {
-    setProductSubcategory(subcategory)
+    console.log('subcategory', subcategory)
+    const subcategoryValue = subcategory || null
+    setProductSubcategory(subcategoryValue)
   }
-  const handleAddProduct = async () => {
+
+  const handleUpdateProduct = async () => {
     const formData = new FormData()
-    formData.append('code', productCode)
-    formData.append('name', productName)
-    formData.append('image', productImage)
-    formData.append('price', productPrice)
-    formData.append('description', productDescription)
-    formData.append('subcategory', productSubcategory)
+    if (productCode) formData.append('code', productCode)
+    if (productName) formData.append('name', productName)
+    if (productImage) formData.append('image', productImage)
+    if (productPrice) formData.append('price', productPrice)
+    if (productDescription) formData.append('description', productDescription)
+    if (productSubcategory !== null && productSubcategory !== undefined) {
+      formData.append('subcategory', productSubcategory)
+    }
     try {
-      await createProduct(categoryId, formData)
-      setAddFormOpen(false)
+      await updateProduct(product._id, formData)
+      setUpdateFormOpen(false)
+      const productsData = await getProducts(categoryId)
+      setProducts(productsData)
     } catch (error) {
       console.error('Error creating category:', error)
     }
-    console.log('formData:', formData)
+  }
+  const handleDeleteButtonClick = (id) => {
+    setSelectedProductId(id)
+    setDeleteDialogOpen(true)
+  }
+  const handleDeleteProduct = async () => {
+    try {
+      await deleteProduct(selectedProductId)
+      setDeleteDialogOpen(false)
+      const productsData = await getProducts(categoryId)
+      setProducts(productsData)
+    } catch (error) {
+      console.error('Error deleting product:', error)
+    }
   }
   return (
     <div>
       <h1>Admin Products Table</h1>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ padding: '0 32px' }}>
         <Toolbar>
           <Grid container justifyContent="space-between">
             <Link to="/admin">
@@ -104,7 +162,7 @@ const AdminProductsTable = ({ categoryId, subcategoriesArray }) => {
         </Toolbar>
         <Table>
           <Dialog open={isAddFormOpen} onClose={() => setAddFormOpen(false)}>
-            <DialogTitle>SubKategoriya qoshish</DialogTitle>
+            <DialogTitle>Mahsulot qoshish</DialogTitle>
             <DialogContent>
               <AddProductForm
                 handleProductCodeChange={handleProductCodeChange}
@@ -127,6 +185,65 @@ const AdminProductsTable = ({ categoryId, subcategoriesArray }) => {
                 variant="outlined"
               >
                 Save
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={isUpdateFormOpen}
+            onClose={() => setUpdateFormOpen(false)}
+          >
+            <DialogTitle>Sab Kategoriyani o'zgartirish</DialogTitle>
+            <DialogContent>
+              <EditProductForm
+                handleProductCodeChange={handleProductCodeChange}
+                handleProductNameChange={handleProductNameChange}
+                handleProductImageChange={handleProductImageChange}
+                handleProductPriceChange={handleProductPriceChange}
+                handleProductDescriptionChange={handleProductDescriptionChange}
+                handleProductSubcategoryChange={handleProductSubcategoryChange}
+                product={product}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setUpdateFormOpen(false)}>Cancel</Button>
+              <Button
+                onClick={() => {
+                  handleUpdateProduct()
+                  setUpdateFormOpen(false)
+                }}
+                variant="outlined"
+                color="success"
+              >
+                Save
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={isDeleteDialogOpen}
+            onClose={() => setDeleteDialogOpen(false)}
+          >
+            <DialogTitle>Mahsulotni o'chirish</DialogTitle>
+            <DialogContent>
+              <Typography>
+                Siz rostdan ham mahsulotni o'chirmoqchimisiz?
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                variant="outlined"
+                onClick={() => setDeleteDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  handleDeleteProduct()
+                  setDeleteDialogOpen(false)
+                }}
+                variant="contained"
+                color="error"
+              >
+                Delete
               </Button>
             </DialogActions>
           </Dialog>
@@ -160,10 +277,18 @@ const AdminProductsTable = ({ categoryId, subcategoriesArray }) => {
                     {product.subcategory ? product.subcategory.name : '__'}
                   </TableCell>
                   <TableCell>
-                    <Button variant="contained" color="primary">
+                    <Button
+                      onClick={() => handleUpdateButtonClick(product._id)}
+                      variant="contained"
+                      color="primary"
+                    >
                       Edit
                     </Button>
-                    <Button variant="contained" color="secondary">
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => handleDeleteButtonClick(product._id)}
+                    >
                       Delete
                     </Button>
                   </TableCell>

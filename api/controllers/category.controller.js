@@ -23,7 +23,6 @@ exports.createCategory = asyncHandler(async (req, res, next) => {
     name: req.body.name,
     image: 'uploads/' + req.file.filename,
   })
-  console.log(req.file)
   res.status(201).json({ success: true, data: newCategory })
 })
 
@@ -71,7 +70,6 @@ exports.updateCategory = asyncHandler(async (req, res, next) => {
     // Update the category image
     req.body.image = 'uploads/' + req.file.filename
   }
-  console.log(req.file)
   const editedCategory = {
     name: req.body.name || category.name,
     image: req.body.image || category.image,

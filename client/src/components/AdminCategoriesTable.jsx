@@ -85,7 +85,6 @@ const CategoriesTable = () => {
 
   const handleDeleteButtonClick = async (selectedCategoryId) => {
     try {
-      console.log(selectedCategoryId)
       await deleteCategory(selectedCategoryId)
       const categoriesData = await getCategories()
       setCategories(categoriesData)

@@ -38,7 +38,6 @@ export const createCategory = async (category) => {
 }
 
 export const updateCategory = async (category) => {
-  console.log('category', category)
   if (!category.get('_id')) throw new Error('Category id is required')
   if (!category.get('name')) throw new Error('Category name is required')
   try {
@@ -166,6 +165,44 @@ export const createProduct = async (componentId, product) => {
     return response.data.data
   } catch (error) {
     console.error('Error creating product:', error)
+    throw error
+  }
+}
+
+export const updateProduct = async (id, product) => {
+  if (!id) throw new Error('Product id is required')
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/api/v1/categories/products/${id}`,
+      product
+    )
+    return response.data.data
+  } catch (error) {
+    console.error('Error updating product:', error)
+    throw error
+  }
+}
+
+export const getProduct = async (id) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/v1/categories/products/${id}`
+    )
+    return response.data.data
+  } catch (error) {
+    console.error('Error fetching product:', error)
+    throw error
+  }
+}
+
+export const deleteProduct = async (id) => {
+  try {
+    const response = await axios.delete(
+      `${BASE_URL}/api/v1/categories/products/${id}`
+    )
+    return response.data.data
+  } catch (error) {
+    console.error('Error deleting product:', error)
     throw error
   }
 }

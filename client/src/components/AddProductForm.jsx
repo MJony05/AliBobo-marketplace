@@ -60,7 +60,9 @@ const AddProductForm = ({
         onChange={(e) => handleProductDescriptionChange(e.target.value)}
       />
       <FormControl sx={{ minWidth: '100%' }}>
-        <InputLabel id="demo-simple-select-label">Subcategory</InputLabel>
+        <InputLabel id="demo-simple-select-label">
+          Mahsulot sabkategoriyasi
+        </InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"

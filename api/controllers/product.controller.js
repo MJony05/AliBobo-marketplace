@@ -39,7 +39,7 @@ exports.createProduct = [
   asyncHandler(async (req, res, next) => {
     const { code, name, price, description } = req.body
     const categoryId = req.params.id
-    let subcategory = ''
+    let subcategory = null
     if (req.body.subcategory) {
       subcategory = await SubCategory.findOne({
         name: req.body.subcategory,
@@ -50,7 +50,6 @@ exports.createProduct = [
     if (!category) {
       return next(new ErrorResponse('Category not found', 404))
     }
-    console.log(req.file)
     const product = await Product.create({
       code,
       name,
@@ -109,6 +108,14 @@ exports.updateProduct = [
       description: req.body.description || product.description,
       category: product.category,
       subcategory: product.subcategory,
+    }
+    if (req.body.subcategory) {
+      const subcategory = await SubCategory.findOne({
+        name: req.body.subcategory,
+      })
+      if (subcategory) {
+        editedProduct.subcategory = subcategory._id // Assign the ObjectId of the subcategory
+      }
     }
     // check if the image is uploaded and set the image field of editedProduct
     if (req.file) {
