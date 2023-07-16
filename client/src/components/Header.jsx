@@ -16,7 +16,11 @@ function Header() {
           </div>
           <div className="search-bar">
             <form action="" className="search-input">
-              <input type="text" placeholder="Mahsulot qidirish" />
+              <input
+                type="text"
+                name="nimadir"
+                placeholder="Mahsulot qidirish"
+              />
               <button
                 type="submit"
                 role="presentation"

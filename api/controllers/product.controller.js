@@ -16,9 +16,17 @@ exports.getProducts = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse('Category not found', 404))
   }
   const products = await Product.find({ category: req.params.id })
-  if (products.length === 0) {
-    return next(new ErrorResponse('Products not found', 404))
-  }
+    .populate({
+      path: 'subcategory',
+      select: 'name', // Specify the fields you want to populate
+    })
+    .exec()
+  // Convert the subcategory field to an array of subcategories
+  products.forEach((product) => {
+    if (product.subcategory && !Array.isArray(product.subcategory)) {
+      product.subcategory = [product.subcategory]
+    }
+  })
   res.status(200).json({ success: true, data: products })
 })
 
@@ -29,7 +37,7 @@ exports.getProducts = asyncHandler(async (req, res, next) => {
 exports.createProduct = [
   // Handle the file upload and set the field name to 'image'
   asyncHandler(async (req, res, next) => {
-    const { name, price, description } = req.body
+    const { code, name, price, description } = req.body
     const categoryId = req.params.id
     let subcategory = ''
     if (req.body.subcategory) {
@@ -42,13 +50,15 @@ exports.createProduct = [
     if (!category) {
       return next(new ErrorResponse('Category not found', 404))
     }
+    console.log(req.file)
     const product = await Product.create({
+      code,
       name,
       price,
       description,
       image: '/uploads/' + req.file.filename, // Save the filename of the uploaded image to the product
       category: categoryId,
-      subcategory: subcategory?.id,
+      subcategory: subcategory,
     })
     category.products.push(product)
     await category.save()
@@ -93,6 +103,7 @@ exports.updateProduct = [
       return next(new ErrorResponse('Product not found', 404))
     }
     const editedProduct = {
+      code: req.body.code || product.code,
       name: req.body.name || product.name,
       price: req.body.price || product.price,
       description: req.body.description || product.description,

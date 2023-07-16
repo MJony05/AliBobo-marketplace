@@ -117,7 +117,17 @@ export const updateSubcategory = async (id, subcategory) => {
     throw error
   }
 }
-
+export const getSubcategory = async (id) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/v1/categories/subcategories/${id}`
+    )
+    return response.data.data
+  } catch (error) {
+    console.error('Error fetching subcategory:', error)
+    throw error
+  }
+}
 export const deleteSubcategory = async (id) => {
   try {
     const response = await axios.delete(
@@ -126,6 +136,36 @@ export const deleteSubcategory = async (id) => {
     return response.data.data
   } catch (error) {
     console.error('Error deleting subcategory:', error)
+    throw error
+  }
+}
+
+// fetching products
+
+export const getProducts = async (componentId) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/v1/categories/${componentId}/products?populate=subcategory`
+    )
+
+    if (response.data.data.length === 0) return null
+
+    return response.data.data
+  } catch (error) {
+    console.error('Error fetching products:', error)
+    throw error
+  }
+}
+
+export const createProduct = async (componentId, product) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/api/v1/categories/${componentId}/products`,
+      product
+    )
+    return response.data.data
+  } catch (error) {
+    console.error('Error creating product:', error)
     throw error
   }
 }

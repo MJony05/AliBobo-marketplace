@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 
 const productSchema = new mongoose.Schema({
+  code: {
+    type: String,
+    required: [true, 'Please enter product code'],
+    unique: true,
+  },
   name: {
     type: String,
     required: [true, 'Please enter category name'],
@@ -22,7 +27,7 @@ const productSchema = new mongoose.Schema({
     ref: 'Category',
     required: true,
   },
-  subcategory: { type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory' },
+  subcategory: { type: mongoose.Schema.Types.ObjectId, ref: 'Subcategory' },
 })
 productSchema.pre('remove', async function (next) {
   const category = await this.model('Category').findById(this.category)

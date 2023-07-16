@@ -30,7 +30,7 @@ const SubCategoriesPage = () => {
 
   return (
     <div className="admin-page">
-      <h1>{category.name}</h1>
+      <h1>{category?.name} kategoriyasi</h1>
       <SubCategoryList subcategories={subcategories} />
     </div>
   )

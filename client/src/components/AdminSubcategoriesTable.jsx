@@ -4,6 +4,7 @@ import {
   createSubcategory,
   updateSubcategory,
   deleteSubcategory,
+  getCategory,
 } from '../services/api'
 import {
   Table,
@@ -25,6 +26,7 @@ import {
 import { Link, useParams } from 'react-router-dom'
 import AddSubCategoryForm from './AddSubCategoryForm'
 import EditSubCategoryForm from './EditSubCategoryForm'
+import AdminProductsTable from './AdminProductsTable'
 const AdminSubcategoriesTable = () => {
   const [isUpdateFormOpen, setUpdateFormOpen] = useState(false)
   const [isAddFormOpen, setAddFormOpen] = useState(false)
@@ -34,6 +36,8 @@ const AdminSubcategoriesTable = () => {
   const [subcategoryImage, setSubcategoryImage] = useState(null)
   const { categoryId } = useParams()
   const [subcategories, setSubcategories] = useState([])
+  const [category, setCategory] = useState(null)
+
   const url = process.env.REACT_APP_API_URL
   useEffect(() => {
     const fetchData = async () => {
@@ -55,6 +59,15 @@ const AdminSubcategoriesTable = () => {
   const handleAddButtonClick = () => {
     setAddFormOpen(true)
   }
+  useEffect(() => {
+    const fetchCategory = async () => {
+      const category = await getCategory(categoryId)
+
+      setCategory(category)
+    }
+    fetchCategory()
+  }, [categoryId])
+
   const handleAddSubcategory = async () => {
     try {
       const formData = new FormData()
@@ -104,10 +117,14 @@ const AdminSubcategoriesTable = () => {
     }
   }
 
+  const subcategoriesArray = subcategories.map((subcategory) => {
+    return subcategory && subcategory.name ? subcategory.name : ''
+  })
+
   return (
     <div className="admin-page">
       <div className="container">
-        <h1>Admin Panel</h1>
+        <h1>{category?.name} Kategoriyasi</h1>
         <TableContainer component={Paper} sx={{ padding: '0 32px' }}>
           <Toolbar>
             <Grid container justifyContent="space-between">
@@ -249,6 +266,12 @@ const AdminSubcategoriesTable = () => {
             </DialogActions>
           </Dialog>
         </TableContainer>
+      </div>
+      <div className="container">
+        <AdminProductsTable
+          subcategoriesArray={subcategoriesArray}
+          categoryId={categoryId}
+        />
       </div>
     </div>
   )
