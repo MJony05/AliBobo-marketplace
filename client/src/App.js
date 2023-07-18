@@ -9,6 +9,7 @@ import AdminSubcategoriesTable from './components/AdminSubcategoriesTable'
 import AdminProductsTable from './components/AdminProductsTable'
 import CartPage from './pages/CartPage'
 import ProductsPage from './pages/ProductsPage'
+import OneProductPage from './pages/OneProductPage'
 import './App.css'
 
 function App() {
@@ -20,13 +21,14 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="categories/" element={<CategoriesPage />} />
           <Route
-            path="categories/:categoryId/subcategories"
+            path="categories/:categoryId/"
             element={<SubcategoriesPage />}
           />
           <Route
-            path="categories/:categoryId/subcategories/:subcategoryId/products"
+            path="categories/:categoryId/:subcategoryId/"
             element={<ProductsPage />}
           />
+          <Route path="products/:productId" element={<OneProductPage />} />
           <Route path="cart" element={<CartPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route

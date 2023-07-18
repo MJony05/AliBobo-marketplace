@@ -3,13 +3,15 @@ import './category.css'
 const SubCategoryList = ({ subcategories }) => {
   return (
     <div className="categories">
-      <div className="container">
-        <ul className="category-list">
-          {subcategories.map((subcategory) => (
+      <ul className="category-list">
+        {subcategories && subcategories.length > 0 ? (
+          subcategories.map((subcategory) => (
             <SubCategoryItem key={subcategory._id} subcategory={subcategory} />
-          ))}
-        </ul>
-      </div>
+          ))
+        ) : (
+          <></>
+        )}
+      </ul>
     </div>
   )
 }

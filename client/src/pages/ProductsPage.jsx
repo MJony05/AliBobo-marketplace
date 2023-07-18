@@ -1,7 +1,9 @@
 const ProductsPage = () => {
   return (
-    <div>
-      <h1>Products</h1>
+    <div className="product-page">
+      <div className="container">
+        <h1>Barcha Mahsulotlar</h1>
+      </div>
     </div>
   )
 }

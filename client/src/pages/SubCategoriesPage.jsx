@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom'
 import { getSubcategories, getCategory } from '../services/api'
 import { useEffect, useState } from 'react'
 import SubCategoryList from '../components/SubcategoryList'
+import ProductList from '../components/ProductList'
 const SubCategoriesPage = () => {
   const { categoryId } = useParams()
   const [subcategories, setSubcategories] = useState([])
@@ -29,9 +30,12 @@ const SubCategoriesPage = () => {
   }
 
   return (
-    <div className="admin-page">
-      <h1>{category?.name} kategoriyasi</h1>
-      <SubCategoryList subcategories={subcategories} />
+    <div className="subcategory-page">
+      <div className="container">
+        <h1>{category?.name}</h1>
+        <SubCategoryList subcategories={subcategories} />
+        <ProductList categoryId={categoryId} />
+      </div>
     </div>
   )
 }

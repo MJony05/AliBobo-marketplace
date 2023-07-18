@@ -3,7 +3,7 @@ const SubCategoryItem = ({ subcategory }) => {
   const url = process.env.REACT_APP_API_URL
   return (
     <Link
-      to={`/categories/${subcategory.category}/subcategories/${subcategory._id}/products`}
+      to={`/categories/${subcategory.category}/${subcategory._id}/`}
       style={{ backgroundImage: `url(${url + '/' + subcategory.image})` }}
       className="category-item"
     >

@@ -4,7 +4,7 @@ const CategoryItem = ({ item }) => {
 
   return (
     <Link
-      to={`/categories/${item._id}/subcategories`}
+      to={`/categories/${item._id}/`}
       className="category-item"
       style={{ backgroundImage: `url(${url + '/' + item.image})` }}
     >
