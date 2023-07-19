@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom'
 import RemoveIcon from '@mui/icons-material/Remove'
 const OneProductPage = () => {
   const { productId } = useParams()
-  console.log(productId)
   const url = process.env.REACT_APP_API_URL
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -39,7 +38,7 @@ const OneProductPage = () => {
                 <button className="amount-btn-left">
                   <RemoveIcon />
                 </button>
-                <input type="number" inputMode="numeric" value="1" />
+                <input type="number" inputMode="numeric" />
                 <button className="amount-btn-right">+</button>
               </div>
               <button className="card-button">Add to cart</button>

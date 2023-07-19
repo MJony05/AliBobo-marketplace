@@ -22,7 +22,7 @@ const AddCategoryForm = ({
         onChange={(e) => handleCategoryNameChange(e.target.value)}
       />
       <MuiFileInput
-        value={file}
+        defaultValue={file}
         label="Rasm yuklash"
         onChange={handleChange}
         sx={{ width: '100%', m: '20px 0' }}
