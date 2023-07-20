@@ -1,0 +1,39 @@
+.cart-page {
+  padding: 20px 0;
+}
+.cart-page h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  margin: 10px 0;
+}
+.input-quantity {
+  width: 88px;
+  display: flex;
+  margin: 0 auto;
+  align-items: center;
+  position: relative;
+  text-align: center;
+}
+.input-quantity-dec,
+.input-quantity-inc {
+  position: absolute;
+  height: 24px;
+  width: 24px;
+  background-color: #fff;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.input-quantity-inc {
+  right: 5px;
+}
+.input-quantity-dec {
+  left: 5px;
+}
+.input-quantity-input {
+  width: 100%;
+  text-align: center;
+}
