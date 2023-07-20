@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { CartContext } from '../CartContext'
 import { Button } from '@mui/material'
-
+import './cart.css'
 const CartPage = () => {
   const { cartItems, removeFromCart, updateQuantity, clearCart } =
     useContext(CartContext)
